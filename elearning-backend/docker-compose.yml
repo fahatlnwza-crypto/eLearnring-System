@@ -1,0 +1,73 @@
+services:
+  # Main Laravel Service
+  app:
+    container_name: elearning-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elearning-backend:latest
+    restart: unless-stopped
+    working_dir: /var/www/html
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:1880
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=elearning
+      - DB_USERNAME=laravel
+      - DB_PASSWORD=password123
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=null
+      - REDIS_PORT=6379
+    ports:
+      - "1880:8000"
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    networks:
+      - elearning-network
+    depends_on:
+      - postgres
+      - redis
+
+  # PostgreSQL Database Service
+  postgres:
+    container_name: elearning-postgres
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: elearning
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - elearning-network
+
+  # Redis Cache Service
+  redis:
+    container_name: elearning-redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - elearning-network
+    command: redis-server --appendonly yes
+
+networks:
+  elearning-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
