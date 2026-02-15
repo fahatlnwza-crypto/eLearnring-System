@@ -31,11 +31,15 @@ export const useAuth = () => {
         token.value = response.token
         user.value = response.user || { email }
 
-        // Save token to localStorage if remember me
-        if (rememberMe) {
-          localStorage.setItem('auth_token', response.token)
-        } else {
-          sessionStorage.setItem('auth_token', response.token)
+        // Save token and user to localStorage (only on client-side)
+        if (process.client) {
+          if (rememberMe) {
+            localStorage.setItem('auth_token', response.token)
+            localStorage.setItem('auth_user', JSON.stringify(user.value))
+          } else {
+            sessionStorage.setItem('auth_token', response.token)
+            sessionStorage.setItem('auth_user', JSON.stringify(user.value))
+          }
         }
       }
 
@@ -61,8 +65,15 @@ export const useAuth = () => {
     } finally {
       token.value = ''
       user.value = null
-      localStorage.removeItem('auth_token')
-      sessionStorage.removeItem('auth_token')
+      
+      // Clear storage only on client-side
+      if (process.client) {
+        localStorage.removeItem('auth_token')
+        localStorage.removeItem('auth_user')
+        sessionStorage.removeItem('auth_token')
+        sessionStorage.removeItem('auth_user')
+      }
+      
       await navigateTo('/login')
     }
   }
@@ -98,7 +109,12 @@ export const useAuth = () => {
       if (response.token) {
         token.value = response.token
         user.value = response.user || { email, username }
-        localStorage.setItem('auth_token', response.token)
+        
+        // Save token and user only on client-side
+        if (process.client) {
+          localStorage.setItem('auth_token', response.token)
+          localStorage.setItem('auth_user', JSON.stringify(user.value))
+        }
       }
 
       return { success: true, ...response }
@@ -116,9 +132,24 @@ export const useAuth = () => {
    * Check if token exists and validate
    */
   const checkAuth = () => {
-    const storedToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token')
-    if (storedToken) {
-      token.value = storedToken
+    // Only check storage on client-side
+    if (process.client) {
+      const storedToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token')
+      const storedUser = localStorage.getItem('auth_user') || sessionStorage.getItem('auth_user')
+      
+      if (storedToken) {
+        token.value = storedToken
+        
+        // Restore user data if available
+        if (storedUser) {
+          try {
+            user.value = JSON.parse(storedUser)
+          } catch (e) {
+            console.error('Error parsing stored user:', e)
+            user.value = null
+          }
+        }
+      }
     }
   }
 

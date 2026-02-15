@@ -1,8 +1,10 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  const { isAuthenticated, checkAuth } = useAuth()
+  const { isAuthenticated, checkAuth, user, token } = useAuth()
 
-  // Check if token exists in storage
-  checkAuth()
+  // Check if token exists in storage (client-side only)
+  if (process.client) {
+    checkAuth()
+  }
 
   // List of routes that require authentication
   const protectedRoutes = ['/dashboard', '/profile', '/account']

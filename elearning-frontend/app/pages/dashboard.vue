@@ -10,10 +10,20 @@
             </h1>
           </div>
           <div class="flex items-center space-x-4">
-            <div class="text-[#003B7A]">
-              <span class="font-semibold">สวัสดี, </span>
-              <span>{{ user?.name || user?.email || 'ผู้ใช้' }}</span>
-            </div>
+            <ClientOnly fallback-tag="div" fallback="Loading...">
+              <template #default>
+                <div class="text-[#003B7A]">
+                  <span class="font-semibold">สวัสดี, </span>
+                  <span>{{ user?.name || user?.email || 'Test User' }}</span>
+                </div>
+              </template>
+              <template #fallback>
+                <div class="text-[#003B7A]">
+                  <span class="font-semibold">สวัสดี, </span>
+                  <span>Test User</span>
+                </div>
+              </template>
+            </ClientOnly>
             <button
               @click="handleLogout"
               class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-150"
@@ -30,9 +40,18 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Welcome Section -->
       <div class="mb-8">
-        <h2 class="text-3xl font-bold text-[#003B7A] mb-2">
-          ยินดีต้อนรับกลับมา! {{ user?.name || 'ผู้เรียน' }}
-        </h2>
+        <ClientOnly>
+          <template #default>
+            <h2 class="text-3xl font-bold text-[#003B7A] mb-2">
+              ยินดีต้อนรับกลับมา! <span v-if="user">{{ user.name || 'Test User' }}</span>
+            </h2>
+          </template>
+          <template #fallback>
+            <h2 class="text-3xl font-bold text-[#003B7A] mb-2">
+              ยินดีต้อนรับกลับมา! Test User
+            </h2>
+          </template>
+        </ClientOnly>
         <p class="text-gray-600">ค้นพบคอร์สเรียนใหม่ๆ และเรียนต่อจากที่ค้างไว้</p>
       </div>
 
