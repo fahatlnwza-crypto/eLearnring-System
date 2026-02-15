@@ -1,7 +1,16 @@
+export interface User {
+  id?: string | number
+  name?: string
+  email?: string
+  username?: string
+  firstname?: string
+  lastname?: string
+}
+
 export const useAuth = () => {
   const config = useRuntimeConfig()
-  const user = useState('auth.user', () => null)
-  const token = useState('auth.token', () => '')
+  const user = useState<User | null>('auth.user', () => null)
+  const token = useState<string>('auth.token', () => '')
   const isAuthenticated = computed(() => !!token.value)
 
   /**
