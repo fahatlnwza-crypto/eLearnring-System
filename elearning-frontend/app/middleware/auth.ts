@@ -1,9 +1,13 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  const { isAuthenticated, checkAuth, user, token } = useAuth()
+  const { isAuthenticated, checkAuth } = useAuth()
 
-  // Check if token exists in storage (client-side only)
-  if (process.client) {
-    checkAuth()
+  // Ensure auth state is restored (plugin should have done this, but double-check)
+  if (typeof window !== 'undefined' && !isAuthenticated.value) {
+    const result = checkAuth()
+    // Give a moment for state to update
+    if (!result.isAuthenticated && (to.path === '/dashboard' || to.path.startsWith('/dashboard'))) {
+      return navigateTo('/login')
+    }
   }
 
   // List of routes that require authentication
@@ -13,7 +17,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const publicRoutes = ['/login', '/register', '/forgot-password', '/']
 
   const isProtectedRoute = protectedRoutes.some(route => to.path.startsWith(route))
-  const isPublicRoute = publicRoutes.includes(to.path)
 
   // If trying to access protected route without authentication
   if (isProtectedRoute && !isAuthenticated.value) {

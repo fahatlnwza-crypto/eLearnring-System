@@ -5,6 +5,10 @@ export interface User {
   username?: string
   firstname?: string
   lastname?: string
+  birthday?: string
+  gender?: string
+  phone?: string
+  bio?: string
 }
 
 export const useAuth = () => {
@@ -32,7 +36,7 @@ export const useAuth = () => {
         user.value = response.user || { email }
 
         // Save token and user to localStorage (only on client-side)
-        if (process.client) {
+        if (typeof window !== 'undefined') {
           if (rememberMe) {
             localStorage.setItem('auth_token', response.token)
             localStorage.setItem('auth_user', JSON.stringify(user.value))
@@ -67,7 +71,7 @@ export const useAuth = () => {
       user.value = null
       
       // Clear storage only on client-side
-      if (process.client) {
+      if (typeof window !== 'undefined') {
         localStorage.removeItem('auth_token')
         localStorage.removeItem('auth_user')
         sessionStorage.removeItem('auth_token')
@@ -111,7 +115,7 @@ export const useAuth = () => {
         user.value = response.user || { email, username }
         
         // Save token and user only on client-side
-        if (process.client) {
+        if (typeof window !== 'undefined') {
           localStorage.setItem('auth_token', response.token)
           localStorage.setItem('auth_user', JSON.stringify(user.value))
         }
@@ -133,23 +137,29 @@ export const useAuth = () => {
    */
   const checkAuth = () => {
     // Only check storage on client-side
-    if (process.client) {
+    if (typeof window !== 'undefined') {
       const storedToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token')
       const storedUser = localStorage.getItem('auth_user') || sessionStorage.getItem('auth_user')
       
-      if (storedToken) {
+      if (storedToken && !token.value) {
         token.value = storedToken
         
         // Restore user data if available
         if (storedUser) {
           try {
-            user.value = JSON.parse(storedUser)
+            const parsedUser = JSON.parse(storedUser)
+            user.value = parsedUser
           } catch (e) {
             console.error('Error parsing stored user:', e)
             user.value = null
           }
         }
       }
+    }
+    
+    return {
+      isAuthenticated: !!token.value,
+      user: user.value
     }
   }
 

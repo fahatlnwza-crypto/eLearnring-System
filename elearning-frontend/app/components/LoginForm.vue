@@ -2,16 +2,15 @@
   <div class="w-full max-w-md mx-auto">
     <div class="bg-white shadow-2xl rounded-2xl px-8 pt-8 pb-8 mb-4 backdrop-blur-sm bg-opacity-95">
       <!-- Logo Section -->
-      <div class="mb-6 text-center">
-        <div class="mb-4 flex justify-center">
-          <div class="w-24 h-24 bg-gradient-to-br from-[#003B7A] to-[#4A9FDB] rounded-full flex items-center justify-center shadow-lg">
-            <svg class="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-            </svg>
+      <div class="mb-5 text-center">
+        <div class="mb-3 flex justify-center">
+          <!-- Logo -->
+          <div class="w-24 h-24">
+            <img src="~/assets/css/logoudom.png" alt="Logo" class="w-full h-full object-contain drop-shadow-md" />
           </div>
         </div>
         <h2 class="text-3xl font-bold bg-gradient-to-r from-[#003B7A] to-[#4A9FDB] bg-clip-text text-transparent">เข้าสู่ระบบ</h2>
-        <p class="text-gray-600 mt-2 font-medium">ยินดีต้อนรับกลับมา</p>
+        <p class="text-gray-600 mt-2 font-medium">วิทยาลัยเทคโนโลยีอุดมศึกษาพณิชยการ</p>
       </div>
 
       <!-- Error Message -->
