@@ -15,16 +15,16 @@
               <span>{{ user?.name || user?.firstname || user?.email || 'ผู้ใช้' }}</span>
             </div>
             <!-- Profile Button -->
-            <button
-              @click="showProfileModal = true"
+            <NuxtLink
+              to="/profile"
               class="flex items-center space-x-2 bg-gradient-to-r from-[#003B7A] to-[#4A9FDB] hover:from-[#00305e] hover:to-[#3c8ac4] text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 hover:scale-105"
-              title="แก้ไขโปรไฟล์"
+              title="ไปหน้าโปรไฟล์"
             >
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
               </svg>
               <span>โปรไฟล์</span>
-            </button>
+            </NuxtLink>
             <button
               @click="handleLogout"
               class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-150"

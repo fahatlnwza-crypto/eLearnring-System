@@ -1,20 +1,17 @@
 export default defineNuxtRouteMiddleware((to, from) => {
+  // Only run on client-side
+  if (process.server) return
+
   const { isAuthenticated, checkAuth } = useAuth()
 
-  // Ensure auth state is restored (plugin should have done this, but double-check)
-  if (typeof window !== 'undefined' && !isAuthenticated.value) {
-    const result = checkAuth()
-    // Give a moment for state to update
-    if (!result.isAuthenticated && (to.path === '/dashboard' || to.path.startsWith('/dashboard'))) {
-      return navigateTo('/login')
-    }
-  }
+  // Restore auth state from storage before checking
+  checkAuth()
 
   // List of routes that require authentication
-  const protectedRoutes = ['/dashboard', '/profile', '/account']
+  const protectedRoutes = ['/dashboard', '/profile', '/account', '/edit-profile']
   
   // List of public routes (anyone can access)
-  const publicRoutes = ['/login', '/register', '/forgot-password', '/']
+  const publicRoutes = ['/login', '/register', '/forgot-password', '/', '/about', '/contact']
 
   const isProtectedRoute = protectedRoutes.some(route => to.path.startsWith(route))
 

@@ -9,6 +9,13 @@ export interface User {
   gender?: string
   phone?: string
   bio?: string
+  avatar?: string
+}
+
+interface AuthResponse {
+  token: string
+  user: User
+  message?: string
 }
 
 export const useAuth = () => {
@@ -22,7 +29,7 @@ export const useAuth = () => {
    */
   const login = async (email: string, password: string, rememberMe: boolean = false) => {
     try {
-      const response = await $fetch(`${config.public.apiBaseUrl}/api/auth/login`, {
+      const response = await $fetch<AuthResponse>(`${config.public.apiBaseUrl}/api/auth/login`, {
         method: 'POST',
         body: {
           email,
@@ -96,7 +103,7 @@ export const useAuth = () => {
     gender?: string
   ) => {
     try {
-      const response = await $fetch(`${config.public.apiBaseUrl}/api/auth/register`, {
+      const response = await $fetch<AuthResponse>(`${config.public.apiBaseUrl}/api/auth/register`, {
         method: 'POST',
         body: {
           username,
@@ -177,6 +184,92 @@ export const useAuth = () => {
     return token.value
   }
 
+  /**
+   * Login with social provider (Google, Facebook)
+   */
+  const loginWithSocial = async (provider: 'google' | 'facebook') => {
+    try {
+      const config = useRuntimeConfig()
+      
+      // Get redirect URL from backend
+      const response = await $fetch<{ url: string }>(`${config.public.apiBaseUrl}/api/auth/${provider}/redirect`, {
+        method: 'GET'
+      })
+
+      if (response.url) {
+        // Open social provider login in popup
+        const width = 500
+        const height = 600
+        const left = window.screen.width / 2 - width / 2
+        const top = window.screen.height / 2 - height / 2
+        
+        const popup = window.open(
+          response.url,
+          `${provider}_login`,
+          `width=${width},height=${height},left=${left},top=${top}`
+        )
+
+        // Listen for message from popup
+        return new Promise((resolve, reject) => {
+          const messageHandler = (event: MessageEvent) => {
+            // Verify origin if needed
+            if (event.data.type === 'social-login-success') {
+              window.removeEventListener('message', messageHandler)
+              
+              token.value = event.data.token
+              user.value = event.data.user
+
+              // Save to storage
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('auth_token', event.data.token)
+                localStorage.setItem('auth_user', JSON.stringify(event.data.user))
+              }
+
+              popup?.close()
+              resolve(event.data)
+            } else if (event.data.type === 'social-login-error') {
+              window.removeEventListener('message', messageHandler)
+              popup?.close()
+              reject(new Error(event.data.message))
+            }
+          }
+
+          window.addEventListener('message', messageHandler)
+
+          // Timeout after 5 minutes
+          setTimeout(() => {
+            window.removeEventListener('message', messageHandler)
+            popup?.close()
+            reject(new Error('Social login timeout'))
+          }, 300000)
+        })
+      }
+
+      throw new Error('ไม่สามารถเชื่อมต่อกับ ' + provider + ' ได้')
+    } catch (error) {
+      console.error('Social login error:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Handle social callback (used in callback page)
+   */
+  const handleSocialCallback = async (provider: 'google' | 'facebook', code: string) => {
+    try {
+      const config = useRuntimeConfig()
+      
+      const response = await $fetch<AuthResponse>(`${config.public.apiBaseUrl}/api/auth/${provider}/callback?code=${code}`, {
+        method: 'GET'
+      })
+
+      return response
+    } catch (error) {
+      console.error('Social callback error:', error)
+      throw error
+    }
+  }
+
   return {
     user: readonly(user),
     token: readonly(token),
@@ -186,6 +279,8 @@ export const useAuth = () => {
     logout,
     checkAuth,
     getUser,
-    getToken
+    getToken,
+    loginWithSocial,
+    handleSocialCallback
   }
 }

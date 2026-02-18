@@ -29,6 +29,12 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/login', [AuthApiController::class, 'login']);
     Route::post('/register', [AuthApiController::class, 'register']);
     Route::post('/refresh', [AuthApiController::class, 'refresh']);
+    
+    // Social login routes
+    Route::get('/{provider}/redirect', [AuthApiController::class, 'redirectToProvider'])
+        ->where('provider', 'google|facebook');
+    Route::get('/{provider}/callback', [AuthApiController::class, 'handleProviderCallback'])
+        ->where('provider', 'google|facebook');
 });
 
 // Protected authentication routes

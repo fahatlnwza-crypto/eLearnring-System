@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 
 class AuthApiController extends Controller
 {
@@ -135,5 +137,123 @@ class AuthApiController extends Controller
                 'name' => $user->firstname . ' ' . $user->lastname
             ]
         ], 201);
+    }
+
+    /**
+     * Redirect to social provider
+     */
+    public function redirectToProvider($provider)
+    {
+        try {
+            $url = Socialite::driver($provider)->stateless()->redirect()->getTargetUrl();
+            return response()->json([
+                'url' => $url
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'เกิดข้อผิดพลาดในการเชื่อมต่อกับ ' . $provider,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Handle social provider callback
+     */
+    public function handleProviderCallback($provider)
+    {
+        try {
+            $socialUser = Socialite::driver($provider)->stateless()->user();
+            
+            // Check if user exists with this provider
+            $user = User::where('provider', $provider)
+                       ->where('provider_id', $socialUser->getId())
+                       ->first();
+
+            if (!$user) {
+                // Check if email already exists
+                $existingUser = User::where('email', $socialUser->getEmail())->first();
+                
+                if ($existingUser) {
+                    // Link social account to existing user
+                    $existingUser->update([
+                        'provider' => $provider,
+                        'provider_id' => $socialUser->getId(),
+                        'avatar' => $socialUser->getAvatar(),
+                    ]);
+                    $user = $existingUser;
+                } else {
+                    // Create new user
+                    $names = $this->parseFullName($socialUser->getName());
+                    $user = User::create([
+                        'username' => $this->generateUsername($socialUser->getEmail()),
+                        'email' => $socialUser->getEmail(),
+                        'password' => null, // No password for social login
+                        'firstname' => $names['firstname'],
+                        'lastname' => $names['lastname'],
+                        'provider' => $provider,
+                        'provider_id' => $socialUser->getId(),
+                        'avatar' => $socialUser->getAvatar(),
+                    ]);
+                }
+            } else {
+                // Update avatar if changed
+                if ($socialUser->getAvatar() !== $user->avatar) {
+                    $user->update(['avatar' => $socialUser->getAvatar()]);
+                }
+            }
+
+            // Create token
+            $token = $user->createToken('api-token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'เข้าสู่ระบบสำเร็จ',
+                'token' => $token,
+                'user' => [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                    'email' => $user->email,
+                    'firstname' => $user->firstname,
+                    'lastname' => $user->lastname,
+                    'name' => $user->firstname . ' ' . $user->lastname,
+                    'avatar' => $user->avatar,
+                ]
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'เกิดข้อผิดพลาดในการเข้าสู่ระบบด้วย ' . $provider,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Parse full name into firstname and lastname
+     */
+    private function parseFullName($fullName)
+    {
+        $parts = explode(' ', $fullName, 2);
+        return [
+            'firstname' => $parts[0] ?? 'User',
+            'lastname' => $parts[1] ?? ''
+        ];
+    }
+
+    /**
+     * Generate unique username from email
+     */
+    private function generateUsername($email)
+    {
+        $username = explode('@', $email)[0];
+        $baseUsername = $username;
+        $counter = 1;
+
+        while (User::where('username', $username)->exists()) {
+            $username = $baseUsername . $counter;
+            $counter++;
+        }
+
+        return $username;
     }
 }
