@@ -48,6 +48,7 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'email',
+        'role',
         'password',
         'firstname',
         'lastname',
@@ -77,4 +78,28 @@ class User extends Authenticatable
         'password' => 'hashed',
         'birthday' => 'date',
     ];
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is teacher
+     */
+    public function isTeacher(): bool
+    {
+        return $this->role === 'teacher';
+    }
+
+    /**
+     * Check if user is student
+     */
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
 }

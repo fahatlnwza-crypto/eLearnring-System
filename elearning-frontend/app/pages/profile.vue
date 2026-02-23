@@ -20,12 +20,7 @@
       <div class="relative w-full px-4 sm:px-6 lg:px-8 pt-6 pb-8">
         <!-- Header with Back Button -->
         <div class="flex items-center justify-between mb-8">
-          <div>
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-2">
-              โปรไฟล์ของฉัน
-            </h1>
-            <p class="text-blue-100 text-base lg:text-lg">จัดการบัญชีและดูความคืบหน้าการเรียนรู้ของคุณ</p>
-          </div>
+          
           <NuxtLink
             to="/dashboard"
             class="hidden lg:inline-flex items-center gap-2 px-6 py-3 bg-white text-[#003B7A] font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
@@ -45,28 +40,7 @@
         </div>
       </div>
 
-      <!-- Stats Grid - Below the gradient, overlapping -->
-      <div class="relative w-full px-4 sm:px-6 lg:px-8 -mt-16">
-        <div class="max-w-5xl mx-auto">
-          <div class="grid grid-cols-3 gap-4 lg:gap-6">
-            <div class="bg-white rounded-2xl p-6 lg:p-8 shadow-xl text-center transform hover:scale-105 transition-all duration-200">
-              <div class="text-3xl mb-2">🎯</div>
-              <div class="text-4xl lg:text-5xl font-bold text-[#003B7A] mb-2">8</div>
-              <div class="text-sm lg:text-base text-gray-600 font-medium">คอร์สทั้งหมด</div>
-            </div>
-            <div class="bg-white rounded-2xl p-6 lg:p-8 shadow-xl text-center transform hover:scale-105 transition-all duration-200">
-              <div class="text-3xl mb-2">✅</div>
-              <div class="text-4xl lg:text-5xl font-bold text-green-600 mb-2">5</div>
-              <div class="text-sm lg:text-base text-gray-600 font-medium">จบแล้ว</div>
-            </div>
-            <div class="bg-white rounded-2xl p-6 lg:p-8 shadow-xl text-center transform hover:scale-105 transition-all duration-200">
-              <div class="text-3xl mb-2">⏱️</div>
-              <div class="text-4xl lg:text-5xl font-bold text-purple-600 mb-2">156</div>
-              <div class="text-sm lg:text-base text-gray-600 font-medium">ชั่วโมงเรียน</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
 
     <!-- Content Section -->

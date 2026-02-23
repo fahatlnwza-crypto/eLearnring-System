@@ -10,13 +10,7 @@
             </h1>
           </div>
           <div class="flex items-center space-x-4">
-            <NuxtLink
-              v-if="!isAuthenticated"
-              to="/login"
-              class="text-[#003B7A] hover:text-[#4A9FDB] px-3 py-2 rounded-md text-sm font-medium transition duration-200"
-            >
-              เข้าสู่ระบบ
-            </NuxtLink>
+            
             <NuxtLink
               v-if="isAuthenticated"
               to="/dashboard"

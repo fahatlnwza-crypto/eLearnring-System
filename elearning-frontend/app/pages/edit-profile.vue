@@ -50,40 +50,93 @@
             <p class="text-sm text-gray-500">คลิกที่รูปเพื่อเปลี่ยน (JPG, PNG, สูงสุด 5MB)</p>
           </div>
 
-          <!-- Personal Information -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Username -->
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">
-                ชื่อผู้ใช้ *
-              </label>
-              <input
-                v-model="formData.username"
-                type="text"
-                required
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+          <!-- Read-only Information -->
+          <div class="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              ข้อมูลที่ไม่สามารถแก้ไขได้
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Username (Read-only) -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  ชื่อผู้ใช้
+                </label>
+                <div class="relative">
+                  <input
+                    v-model="formData.username"
+                    type="text"
+                    disabled
+                    class="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                  />
+                  <svg class="w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                  </svg>
+                </div>
+              </div>
 
-            <!-- Email (Read-only) -->
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">
-                อีเมล
-                <span class="text-xs text-gray-500">(ไม่สามารถแก้ไขได้)</span>
-              </label>
-              <div class="relative">
-                <input
-                  v-model="formData.email"
-                  type="email"
-                  disabled
-                  class="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
-                />
-                <svg class="w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
+              <!-- Email (Read-only) -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  อีเมล
+                </label>
+                <div class="relative">
+                  <input
+                    v-model="formData.email"
+                    type="email"
+                    disabled
+                    class="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                  />
+                  <svg class="w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Birthday (Read-only) -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  วันเกิด
+                </label>
+                <div class="relative">
+                  <input
+                    v-model="formData.birthday"
+                    type="date"
+                    disabled
+                    class="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                  />
+                  <svg class="w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Gender (Read-only) -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  เพศ
+                </label>
+                <div class="relative">
+                  <input
+                    v-model="genderDisplay"
+                    type="text"
+                    disabled
+                    class="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                  />
+                  <svg class="w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                  </svg>
+                </div>
               </div>
             </div>
+          </div>
 
+          <!-- Editable Personal Information -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">ข้อมูลส่วนตัว</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- First Name -->
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -110,34 +163,6 @@
               />
             </div>
 
-            <!-- Birthday -->
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">
-                วันเกิด
-              </label>
-              <input
-                v-model="formData.birthday"
-                type="date"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <!-- Gender -->
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">
-                เพศ
-              </label>
-              <select
-                v-model="formData.gender"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">เลือกเพศ</option>
-                <option value="male">ชาย</option>
-                <option value="female">หญิง</option>
-                <option value="other">อื่นๆ</option>
-              </select>
-            </div>
-
             <!-- Phone -->
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -149,6 +174,7 @@
                 placeholder="08X-XXX-XXXX"
                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+            </div>
             </div>
           </div>
 
@@ -220,6 +246,15 @@ const formData = ref({
   phone: user.value?.phone || '',
   bio: user.value?.bio || '',
   avatar: user.value?.avatar || ''
+})
+
+const genderDisplay = computed(() => {
+  const genderMap: Record<string, string> = {
+    'male': 'ชาย',
+    'female': 'หญิง',
+    'other': 'อื่นๆ'
+  }
+  return genderMap[formData.value.gender] || 'ไม่ระบุ'
 })
 
 const openImageUpload = () => {

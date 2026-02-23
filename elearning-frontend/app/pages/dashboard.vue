@@ -10,28 +10,18 @@
             </h1>
           </div>
           <div class="flex items-center space-x-4">
-            <div class="text-[#003B7A]">
-              <span class="font-semibold">สวัสดี, </span>
-              <span>{{ user?.name || user?.firstname || user?.email || 'ผู้ใช้' }}</span>
-            </div>
-            <!-- Profile Button -->
+            <!-- Upload Media Button (Teacher & Admin only) -->
             <NuxtLink
-              to="/profile"
-              class="flex items-center space-x-2 bg-gradient-to-r from-[#003B7A] to-[#4A9FDB] hover:from-[#00305e] hover:to-[#3c8ac4] text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 hover:scale-105"
-              title="ไปหน้าโปรไฟล์"
+              v-if="user?.role === 'teacher' || user?.role === 'admin'"
+              to="/teacher/upload-media"
+              class="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 hover:scale-105"
+              title="อัปโหลดสื่อการเรียน"
             >
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
               </svg>
-              <span>โปรไฟล์</span>
+              <span>อัปโหลดสื่อ</span>
             </NuxtLink>
-            <button
-              @click="handleLogout"
-              class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-150"
-              :disabled="loggingOut"
-            >
-              {{ loggingOut ? 'กำลังออกจากระบบ...' : 'ออกจากระบบ' }}
-            </button>
           </div>
         </div>
       </div>
@@ -41,32 +31,268 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Welcome Section -->
       <div class="mb-8">
-        <h2 class="text-3xl font-bold text-[#003B7A] mb-2">
-          ยินดีต้อนรับกลับมา! <span v-if="user">{{ user.name || user.firstname || user.email || 'ผู้ใช้' }}</span>
-        </h2>
-        <p class="text-gray-600">ค้นพบคอร์สเรียนใหม่ๆ และเรียนต่อจากที่ค้างไว้</p>
+        <div>
+          <h2 class="text-3xl font-bold text-[#003B7A] mb-2">
+            ยินดีต้อนรับ <span v-if="user">{{ user.name || user.firstname || user.email || 'ผู้ใช้' }}</span>
+          </h2>
+        </div>
+      </div>
+
+      <!-- Quick Actions Section - Large Cards -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-[#003B7A] mb-4">เมนูด่วน</h3>
+        
+        <!-- Admin Quick Actions -->
+        <div v-if="user?.role === 'admin'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <NuxtLink
+            to="/admin/media"
+            class="group bg-white hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 rounded-xl shadow-lg p-6 border-2 border-transparent hover:border-[#003B7A] transition-all duration-300 hover:scale-105"
+          >
+            <div class="flex items-start gap-4">
+              <div class="bg-gradient-to-br from-[#003B7A] to-[#4A9FDB] rounded-lg p-4">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg text-[#003B7A] mb-1 group-hover:text-blue-700">จัดการสื่อ (Admin)</h4>
+                <p class="text-sm text-gray-600">ดูและจัดการสื่อการเรียนทั้งหมด</p>
+              </div>
+            </div>
+          </NuxtLink>
+
+          <NuxtLink
+            to="/teacher/upload-media"
+            class="group bg-white hover:bg-gradient-to-br hover:from-green-50 hover:to-emerald-50 rounded-xl shadow-lg p-6 border-2 border-transparent hover:border-green-500 transition-all duration-300 hover:scale-105"
+          >
+            <div class="flex items-start gap-4">
+              <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-4">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg text-green-700 mb-1 group-hover:text-green-800">อัปโหลดสื่อใหม่</h4>
+                <p class="text-sm text-gray-600">เพิ่มสื่อการเรียนใหม่เข้าระบบ</p>
+              </div>
+            </div>
+          </NuxtLink>
+
+          <NuxtLink
+            to="/teacher/media"
+            class="group bg-white hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 rounded-xl shadow-lg p-6 border-2 border-transparent hover:border-amber-500 transition-all duration-300 hover:scale-105"
+          >
+            <div class="flex items-start gap-4">
+              <div class="bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg p-4">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg text-amber-700 mb-1 group-hover:text-amber-800">สื่อของฉัน</h4>
+                <p class="text-sm text-gray-600">ดูสื่อการเรียนที่คุณอัปโหลด</p>
+              </div>
+            </div>
+          </NuxtLink>
+        </div>
+
+        <!-- Teacher Quick Actions -->
+        <div v-else-if="user?.role === 'teacher'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <NuxtLink
+            to="/teacher/media"
+            class="group bg-white hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 rounded-xl shadow-lg p-6 border-2 border-transparent hover:border-[#003B7A] transition-all duration-300 hover:scale-105"
+          >
+            <div class="flex items-start gap-4">
+              <div class="bg-gradient-to-br from-[#003B7A] to-[#4A9FDB] rounded-lg p-4">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg text-[#003B7A] mb-1 group-hover:text-blue-700">จัดการสื่อของฉัน</h4>
+                <p class="text-sm text-gray-600">ดูและจัดการสื่อการเรียนที่คุณอัปโหลด</p>
+              </div>
+            </div>
+          </NuxtLink>
+
+          <NuxtLink
+            to="/teacher/upload-media"
+            class="group bg-white hover:bg-gradient-to-br hover:from-green-50 hover:to-emerald-50 rounded-xl shadow-lg p-6 border-2 border-transparent hover:border-green-500 transition-all duration-300 hover:scale-105"
+          >
+            <div class="flex items-start gap-4">
+              <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-4">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg text-green-700 mb-1 group-hover:text-green-800">อัปโหลดสื่อใหม่</h4>
+                <p class="text-sm text-gray-600">เพิ่มสื่อการเรียนใหม่เข้าระบบ</p>
+              </div>
+            </div>
+          </NuxtLink>
+        </div>
+
+        <!-- Student Quick Actions -->
+        <div v-else-if="user?.role === 'student'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <NuxtLink
+            to="/student/media"
+            class="group bg-white hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 rounded-xl shadow-lg p-6 border-2 border-transparent hover:border-purple-500 transition-all duration-300 hover:scale-105"
+          >
+            <div class="flex items-start gap-4">
+              <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-4">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg text-purple-700 mb-1 group-hover:text-purple-800">สื่อการเรียน</h4>
+                <p class="text-sm text-gray-600">ดูและเรียนรู้จากสื่อการเรียนทั้งหมด</p>
+              </div>
+            </div>
+          </NuxtLink>
+
+          <NuxtLink
+            to="/profile"
+            class="group bg-white hover:bg-gradient-to-br hover:from-blue-50 hover:to-cyan-50 rounded-xl shadow-lg p-6 border-2 border-transparent hover:border-blue-500 transition-all duration-300 hover:scale-105"
+          >
+            <div class="flex items-start gap-4">
+              <div class="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg p-4">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg text-blue-700 mb-1 group-hover:text-blue-800">โปรไฟล์ของฉัน</h4>
+                <p class="text-sm text-gray-600">ดูและแก้ไขข้อมูลส่วนตัว</p>
+              </div>
+            </div>
+          </NuxtLink>
+        </div>
       </div>
 
       <!-- Search Bar Section -->
       <div class="mb-8">
-        <SearchBar
-          @search="handleSearch"
-          @filter-categories="handleFilterCategories"
-        />
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="relative">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input 
+              v-model="searchQuery" 
+              type="text" 
+              placeholder="ค้นหาสื่อการเรียน บทเรียน หรือเนื้อหา..." 
+              class="w-full pl-14 pr-12 py-4 text-lg border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#003B7A] transition-colors"
+              @input="handleSearchInput"
+            />
+            <button 
+              v-if="searchQuery" 
+              @click="clearSearch" 
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 text-gray-500">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
 
-      <!-- Search Results (if searching) -->
+      <!-- Search Results for Media (if searching) -->
+      <div v-if="showSearchResults && searchQuery" class="mb-8">
+        <div class="mb-4">
+          <h3 class="text-2xl font-bold text-[#003B7A]">ผลการค้นหาสื่อ</h3>
+          <p class="text-gray-600">พบ {{ filteredMedia.length }} รายการ</p>
+        </div>
+        
+        <!-- Loading State -->
+        <div v-if="mediaLoading" class="flex justify-center py-12">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#003B7A] border-t-transparent"></div>
+        </div>
+
+        <!-- Media Grid -->
+        <div v-else-if="filteredMedia.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div 
+            v-for="media in filteredMedia" 
+            :key="media.id" 
+            class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105"
+          >
+            <div class="relative cursor-pointer" @click="viewMedia(media.id)">
+              <div class="h-48 bg-gradient-to-br from-[#003B7A] to-[#4A9FDB] flex items-center justify-center">
+                <svg v-if="media.media_type === 'video'" class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <svg v-else-if="media.media_type === 'document'" class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <svg v-else class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div class="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full text-xs font-semibold" :class="getMediaTypeColor(media.media_type)">
+                {{ getMediaTypeLabel(media.media_type) }}
+              </div>
+              <div v-if="media.status === 'published'" class="absolute top-3 left-3 px-3 py-1 bg-green-500 text-white rounded-full text-xs font-semibold">
+                เผยแพร่แล้ว
+              </div>
+            </div>
+            
+            <div class="p-5">
+              <div class="cursor-pointer" @click="viewMedia(media.id)">
+                <h4 class="text-lg font-bold text-[#003B7A] mb-2 line-clamp-2">{{ media.title }}</h4>
+                <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ media.description || 'ไม่มีคำอธิบาย' }}</p>
+                
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
+                  <span v-if="media.category" class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    {{ media.category }}
+                  </span>
+                  <span>{{ formatFileSize(media.file_size) }}</span>
+                </div>
+              </div>
+              
+              <!-- Download Button -->
+              <button 
+                @click.stop="handleDownload(media.id, media.title)"
+                class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                ดาวน์โหลด
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="text-center py-12 bg-white rounded-xl shadow-lg">
+          <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="text-xl font-bold text-gray-700 mb-2">ไม่พบสื่อที่ค้นหา</h3>
+          <p class="text-gray-500">ลองค้นหาด้วยคำอื่น</p>
+        </div>
+      </div>
+
+      <!-- Search Results for Courses (if searching) -->
+      <!-- ซ่อน Course Section ออก เพื่อแสดงเฉพาะวิดีโอ
       <CourseSection
-        v-if="showSearchResults"
-        title="ผลการค้นหา"
+        v-if="showSearchResults && searchQuery"
+        title="ผลการค้นหาคอร์ส"
         :subtitle="`พบ ${filteredCourses.length} คอร์ส`"
         :courses="filteredCourses"
         :loading="loading"
         :show-view-all="false"
         @course-action="handleCourseAction"
       />
+      -->
 
       <!-- Recent Courses Section (only show when not searching) -->
+      <!-- ซ่อน Course Section ออก เพื่อแสดงเฉพาะวิดีโอ
       <CourseSection
         v-if="!showSearchResults && recentCourses.length > 0"
         title="เรียนต่อ"
@@ -76,8 +302,86 @@
         :show-view-all="true"
         @course-action="handleCourseAction"
       />
+      -->
+
+      <!-- Recent Media Section (only show when not searching) -->
+      <div v-if="!showSearchResults && allMedia.length > 0" class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-2xl font-bold text-[#003B7A]">สื่อการเรียนล่าสุด</h3>
+            <p class="text-gray-600">สื่อที่อัปโหลดล่าสุดในระบบ</p>
+          </div>
+          <NuxtLink 
+            to="/teacher/media" 
+            class="flex items-center gap-2 text-[#003B7A] hover:text-[#4A9FDB] font-semibold transition-colors"
+          >
+            ดูทั้งหมด
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </NuxtLink>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div 
+            v-for="media in allMedia.slice(0, 6)" 
+            :key="media.id" 
+            class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105"
+          >
+            <div class="relative cursor-pointer" @click="viewMedia(media.id)">
+              <div class="h-48 bg-gradient-to-br from-[#003B7A] to-[#4A9FDB] flex items-center justify-center">
+                <svg v-if="media.media_type === 'video'" class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <svg v-else-if="media.media_type === 'document'" class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <svg v-else class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div class="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full text-xs font-semibold" :class="getMediaTypeColor(media.media_type)">
+                {{ getMediaTypeLabel(media.media_type) }}
+              </div>
+              <div v-if="media.status === 'published'" class="absolute top-3 left-3 px-3 py-1 bg-green-500 text-white rounded-full text-xs font-semibold">
+                เผยแพร่แล้ว
+              </div>
+            </div>
+            
+            <div class="p-5">
+              <div class="cursor-pointer" @click="viewMedia(media.id)">
+                <h4 class="text-lg font-bold text-[#003B7A] mb-2 line-clamp-2">{{ media.title }}</h4>
+                <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ media.description || 'ไม่มีคำอธิบาย' }}</p>
+                
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
+                  <span v-if="media.category" class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    {{ media.category }}
+                  </span>
+                  <span>{{ formatFileSize(media.file_size) }}</span>
+                </div>
+              </div>
+              
+              <!-- Download Button -->
+              <button 
+                @click.stop="handleDownload(media.id, media.title)"
+                class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                ดาวน์โหลด
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Recommended Courses Section (only show when not searching) -->
+      <!-- ซ่อน Course Section ออก เพื่อแสดงเฉพาะวิดีโอ
       <CourseSection
         v-if="!showSearchResults"
         title="แนะนำสำหรับคุณ"
@@ -87,8 +391,10 @@
         :show-view-all="true"
         @course-action="handleCourseAction"
       />
+      -->
 
       <!-- Popular Courses Section (only show when not searching) -->
+      <!-- ซ่อน Course Section ออก เพื่อแสดงเฉพาะวิดีโอ
       <CourseSection
         v-if="!showSearchResults"
         title="ยอดนิยม"
@@ -98,59 +404,7 @@
         :show-view-all="true"
         @course-action="handleCourseAction"
       />
-
-      <!-- Stats Overview -->
-      <div v-if="!showSearchResults" class="mt-12">
-        <h2 class="text-2xl font-bold bg-gradient-to-r from-[#003B7A] to-[#4A9FDB] bg-clip-text text-transparent mb-6">
-          สถิติการเรียน
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Enrolled Courses -->
-          <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300 border-t-4 border-[#003B7A]">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-600 text-sm mb-1">คอร์สที่ลงทะเบียน</p>
-                <p class="text-3xl font-bold text-[#003B7A]">{{ enrolledCount }}</p>
-              </div>
-              <div class="bg-gradient-to-br from-[#003B7A] to-[#4A9FDB] rounded-lg p-3">
-                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- Completed Courses -->
-          <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300 border-t-4 border-[#4A9FDB]">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-600 text-sm mb-1">คอร์สที่จบแล้ว</p>
-                <p class="text-3xl font-bold text-[#4A9FDB]">{{ completedCount }}</p>
-              </div>
-              <div class="bg-gradient-to-br from-[#4A9FDB] to-[#87CEEB] rounded-lg p-3">
-                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- Learning Hours -->
-          <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300 border-t-4 border-[#87CEEB]">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-600 text-sm mb-1">ชั่วโมงการเรียน</p>
-                <p class="text-3xl font-bold text-[#87CEEB]">{{ learningHours }}</p>
-              </div>
-              <div class="bg-gradient-to-br from-[#87CEEB] to-[#4A9FDB] rounded-lg p-3">
-                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      -->
     </main>
 
     <!-- Profile Edit Modal -->
@@ -439,6 +693,7 @@
 
 <script setup lang="ts">
 const { user, logout, checkAuth } = useAuth()
+const { getMedia } = useMedia()
 const {
   popularCourses,
   recommendedCourses,
@@ -454,6 +709,13 @@ const {
 const loggingOut = ref(false)
 const showSearchResults = ref(false)
 const authReady = ref(false)
+const searchQuery = ref('')
+const searchTimeout = ref<number | null>(null)
+
+// Media state
+const allMedia = ref<any[]>([])
+const filteredMedia = ref<any[]>([])
+const mediaLoading = ref(false)
 
 // Profile Modal State
 const showProfileModal = ref(false)
@@ -489,21 +751,86 @@ definePageMeta({
   middleware: 'auth'
 })
 
+// Fetch media
+const fetchMedia = async () => {
+  try {
+    mediaLoading.value = true
+    const response: any = await getMedia(1, '')
+    if (response.success) {
+      // แสดงสื่อทุกประเภท
+      allMedia.value = response.data.data || []
+      filteredMedia.value = allMedia.value
+    }
+  } catch (error) {
+    console.error('Error fetching media:', error)
+  } finally {
+    mediaLoading.value = false
+  }
+}
+
+// Search media
+const searchMedia = async (query: string) => {
+  try {
+    mediaLoading.value = true
+    const response: any = await getMedia(1, query)
+    if (response.success) {
+      // แสดงผลค้นหาทุกประเภทสื่อ
+      filteredMedia.value = response.data.data || []
+    }
+  } catch (error) {
+    console.error('Error searching media:', error)
+    filteredMedia.value = []
+  } finally {
+    mediaLoading.value = false
+  }
+}
+
 // Fetch courses on mount
 onMounted(async () => {
   // Ensure auth is restored from storage
   checkAuth()
   authReady.value = true
-  await fetchCourses()
+  await Promise.all([
+    fetchCourses(),
+    fetchMedia()
+  ])
 })
 
-// Handle search
+// Handle search input with debounce
+const handleSearchInput = () => {
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+  }
+  
+  searchTimeout.value = setTimeout(() => {
+    if (searchQuery.value.trim()) {
+      searchCourses(searchQuery.value)
+      searchMedia(searchQuery.value)
+      showSearchResults.value = true
+    } else {
+      showSearchResults.value = false
+      filteredMedia.value = allMedia.value
+    }
+  }, 500)
+}
+
+// Clear search
+const clearSearch = () => {
+  searchQuery.value = ''
+  showSearchResults.value = false
+  filteredMedia.value = allMedia.value
+}
+
+// Handle search (legacy - kept for compatibility)
 const handleSearch = (query: string) => {
+  searchQuery.value = query
   if (query.trim()) {
     searchCourses(query)
+    searchMedia(query)
     showSearchResults.value = true
   } else {
     showSearchResults.value = false
+    filteredMedia.value = allMedia.value
   }
 }
 
@@ -522,6 +849,55 @@ const handleCourseAction = (courseId: string) => {
   startCourse(courseId)
   // Navigate to course detail page
   navigateTo(`/courses/${courseId}`)
+}
+
+// View media
+const viewMedia = (id: string) => {
+  navigateTo(`/teacher/media/${id}`)
+}
+
+// Get media type label
+const getMediaTypeLabel = (type: string) => {
+  const labels: Record<string, string> = {
+    video: 'วิดีโอ',
+    document: 'เอกสาร',
+    image: 'รูปภาพ',
+    audio: 'เสียง',
+    other: 'อื่นๆ'
+  }
+  return labels[type] || type
+}
+
+// Get media type color
+const getMediaTypeColor = (type: string) => {
+  const colors: Record<string, string> = {
+    video: 'text-purple-700',
+    document: 'text-blue-700',
+    image: 'text-green-700',
+    audio: 'text-orange-700',
+    other: 'text-gray-700'
+  }
+  return colors[type] || 'text-gray-700'
+}
+
+// Format file size
+const formatFileSize = (bytes: number) => {
+  if (!bytes) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+}
+
+// Handle download
+const handleDownload = async (mediaId: string, title: string) => {
+  try {
+    const { downloadMedia } = useMedia()
+    await downloadMedia(mediaId)
+  } catch (error: any) {
+    console.error('Download error:', error)
+    alert(error.message || 'ไม่สามารถดาวน์โหลดไฟล์ได้ กรุณาลองใหม่อีกครั้ง')
+  }
 }
 
 // Handle logout
@@ -668,5 +1044,14 @@ select:focus {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
   }
+}
+
+/* Line Clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-clamp: 2;
 }
 </style>

@@ -44,7 +44,8 @@ class AuthApiController extends Controller
                 'email' => $user->email,
                 'firstname' => $user->firstname,
                 'lastname' => $user->lastname,
-                'name' => $user->firstname . ' ' . $user->lastname
+                'name' => $user->firstname . ' ' . $user->lastname,
+                'role' => $user->role
             ]
         ], 200);
     }
@@ -119,7 +120,8 @@ class AuthApiController extends Controller
             'firstname' => $validated['firstname'],
             'lastname' => $validated['lastname'],
             'birthday' => $validated['birthday'] ?? null,
-            'gender' => $validated['gender'] ?? null
+            'gender' => $validated['gender'] ?? null,
+            'role' => 'student' // Default role
         ]);
 
         // Create token
@@ -134,7 +136,8 @@ class AuthApiController extends Controller
                 'email' => $user->email,
                 'firstname' => $user->firstname,
                 'lastname' => $user->lastname,
-                'name' => $user->firstname . ' ' . $user->lastname
+                'name' => $user->firstname . ' ' . $user->lastname,
+                'role' => $user->role
             ]
         ], 201);
     }
@@ -194,6 +197,7 @@ class AuthApiController extends Controller
                         'provider' => $provider,
                         'provider_id' => $socialUser->getId(),
                         'avatar' => $socialUser->getAvatar(),
+                        'role' => 'student' // Default role
                     ]);
                 }
             } else {
@@ -217,6 +221,7 @@ class AuthApiController extends Controller
                     'lastname' => $user->lastname,
                     'name' => $user->firstname . ' ' . $user->lastname,
                     'avatar' => $user->avatar,
+                    'role' => $user->role
                 ]
             ], 200);
 

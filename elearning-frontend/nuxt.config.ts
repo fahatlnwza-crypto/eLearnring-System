@@ -39,5 +39,30 @@ export default defineNuxtConfig({
   // Build configuration
   build: {
     transpile: []
+  },
+
+  // Pages configuration
+  pages: true,
+  
+  // Hooks for custom routes (Windows workaround)
+  hooks: {
+    'pages:extend': (pages) => {
+      // Add dynamic routes manually for Windows compatibility
+      pages.push({
+        name: 'teacher-media-id',
+        path: '/teacher/media/:id',
+        file: '~/pages/teacher/media/$id.vue'
+      })
+      pages.push({
+        name: 'student-media-id',
+        path: '/student/media/:id',
+        file: '~/pages/student/media/$id.vue'
+      })
+      pages.push({
+        name: 'admin-media-id',
+        path: '/admin/media/:id',
+        file: '~/pages/admin/media/$id.vue'
+      })
+    }
   }
 })

@@ -12,6 +12,8 @@ return [
             'driver' => 'database',
             'connection' => env('QUEUE_DB_CONNECTION'),
             'table' => env('QUEUE_DB_TABLE', 'jobs'),
+            'queue' => 'default',
+            'retry_after' => 90,
         ],
 
         'beanstalkd' => [
